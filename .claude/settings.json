@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 briefing.py --collect:*)",
+      "Read",
+      "Write",
+      "Bash(python3 inbox_cleanup.py --list-unread:*)",
+      "Bash(python3 inbox_cleanup.py --unsub:*)",
+      "Bash(python3 tasks.py --overdue:*)",
+      "Bash(python3 tasks.py --list:*)",
+      "Bash(python3 tasks.py --reap:*)"
+    ],
+    "deny": [
+      "Bash(python3 briefing.py --send-input:*)",
+      "Bash(python3 briefing.py)"
+    ]
+  }
+}

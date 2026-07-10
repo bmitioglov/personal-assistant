@@ -1,0 +1,42 @@
+# Standing instructions & context for the morning briefing
+
+Anything in this file is read by the assistant every morning and factored into the
+briefing. Add a line anytime — plain English. Delete lines when they no longer apply.
+(You can edit this yourself, or just tell your AI CLI "add a note: ...".)
+
+Copy this file to `notes.md` and replace the examples below with your own.
+
+## Ongoing preferences
+<!-- e.g. "Keep it under ~150 words." -->
+<!-- e.g. "Always call out recruiter emails." -->
+<!-- e.g. "Family / milestone / anniversary events are important — never suggest
+     deleting them. Highlight them warmly near the top of the briefing." -->
+
+## Inbox
+<!-- e.g. "Daily auto-declutter is ON (inbox_cleanup.py --declutter): it marks read +
+     archives + labels known bulk senders. These are noise — don't surface them." -->
+<!-- e.g. "Never auto-touch / always keep in inbox: real bank/bill alerts, security
+     emails, anything from a real person." -->
+<!-- To add a sender to the noise list, edit `NOISE` in `inbox_cleanup.py`. -->
+<!-- e.g. "Content-aware triage is ON: read each remaining unread and archive the
+     routine/no-action ones, keeping anything actionable, personal, financial, or
+     from a real person. When unsure, keep." -->
+
+## Unsubscribe suggestions
+<!-- e.g. "Never suggest unsubscribing from: my own app's notifications, my web
+     host, real banks/bills." -->
+<!-- e.g. "I'm unsubscribing from LinkedIn myself — stop suggesting it." -->
+<!-- Don't repeat a suggestion already acted on or dismissed — tracked in
+     `unsub_suggested.txt`. -->
+
+## Calendar context (whose event is whose)
+<!-- e.g. "'Pilates' sessions on the calendar are my partner's, not mine — don't give
+     me workout prep nudges for those, just mention them as household logistics." -->
+<!-- e.g. "My own recurring workouts: gym (Mon/Wed/Fri), climbing (Tue)." -->
+
+## Reminders / things to watch
+<!-- e.g. "Expecting a package this week — flag the delivery." -->
+<!-- e.g. "Renew passport before August." -->
+
+## Temporary context (remember to clear)
+<!-- e.g. "On vacation Jul 10–15 — go light, skip work email." -->

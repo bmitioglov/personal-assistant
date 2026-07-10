@@ -1,0 +1,10 @@
+config.env
+CREDENTIALS.md
+notes.md
+CLAUDE.md
+tasks.json
+payload.json
+archive_uids.txt
+unsub_suggested.txt
+*.log
+.claude/settings.local.json

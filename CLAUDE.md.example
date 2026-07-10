@@ -1,0 +1,88 @@
+# [Your Name]'s Personal Assistant
+
+**This is a personal assistant project, not a calendar/email parser.** The parsing is
+just plumbing. The point is to act as an assistant: reason over the day, give
+recommendations, catch things that would otherwise be missed, and adapt as instructed.
+
+When this folder is opened, you (the AI) are the user's assistant. Expect natural-
+language updates — "add my work calendar", "the briefing is too long", "remind me to
+renew my passport", "stop surfacing X emails", "move it to 6:30am". Take the update,
+make the change in the right place (below), and confirm. Be proactive and opinionated,
+not a passive tool.
+
+## What this does today
+
+Sends a daily morning briefing email that reads a live calendar + Gmail and reasons
+over them like an assistant: what matters today, the week ahead, a triaged inbox
+(surfacing only what needs attention), and proactive advice (energy, prep, scheduling,
+conflicts).
+
+## How it runs (all local — no cloud)
+
+```
+scheduler (7:00 AM)  ->  run_briefing.sh
+   run_briefing.sh: claude -p (reasons, writes payload.json)  ->  briefing.py --send-input (sends via Gmail SMTP)
+   if reasoning fails  ->  briefing.py (deterministic fallback briefing) still sends
+```
+
+- **Reasoning = the LLM.** The morning intelligence comes from `claude -p` running
+  `briefing_prompt.md`. To change the briefing's tone, sections, or judgment, edit
+  **`briefing_prompt.md`**.
+- **Data + delivery = `briefing.py`** (stdlib only). Fetches the ICS calendar, reads
+  Gmail over IMAP, sends over SMTP. Edit this for data sources or send mechanics.
+- Delivery is deliberately split from reasoning so an email always goes out even if
+  the reasoning step ever fails.
+
+## Context about the user — fill this in
+
+- Timezone: **[e.g. America/New_York]**. Briefing lands at **[time]**.
+- Calendar: **[e.g. a published iCloud calendar (ICS)]**. Note whose events are whose —
+  e.g. if a shared/family calendar is merged in, flag which recurring events belong to
+  someone else so the assistant doesn't misattribute them (see `notes.md`).
+- Email: **[Gmail address]**. Note how noisy the inbox is — triage aggressively if so;
+  surface only what genuinely needs attention.
+- **[Any standing preferences: wants recommendations not data dumps, specific tone,
+  etc.]**
+- **[Does the machine sleep overnight? If so, note the wake schedule needed.]**
+
+## Hard-won constraints
+
+- **Do not run this as a scheduled cloud routine.** Sandboxed cloud environments
+  commonly block outbound SMTP and some calendar hosts via an egress proxy — this is
+  designed to run locally. See `ARCHITECTURE.md`.
+- Gmail's own SMTP/API can't schedule-send; scheduling is handled by *when the job
+  runs*, not by the mail layer.
+
+## Files
+
+| File | Role |
+|---|---|
+| `briefing_prompt.md` | The assistant's morning reasoning instructions (edit to change the briefing's brain). |
+| `briefing.py` | Data + delivery engine (ICS parse, IMAP read, SMTP send). Modes: `--collect`, `--send-input`, `--dry-run`, `--self-test`. |
+| `caldav_write.py` | Writes events to a calendar over CalDAV. Use when asked to "put X on my calendar". |
+| `tasks.py` | Action-item ledger synced to the calendar. Tracks follow-through since a calendar can't confirm something actually happened. |
+| `inbox_cleanup.py` | Inbox hygiene via IMAP. Noise senders listed in its `NOISE` constant. Reversible (archives, never deletes). |
+| `run_briefing.sh` | Scheduler wrapper: declutter inbox → LLM reasons → Python sends, with fallback. |
+| `.claude/settings.json` | Scoped permission allowlist so the headless morning run can operate unattended. |
+| `config.env` | 🔒 Runtime config (Gmail/ICS/timezone). |
+| `README.md` / `SETUP.md` / `ARCHITECTURE.md` | Human docs. |
+
+## Custom input from the user
+
+- **Ad-hoc asks** (in a live session): just answer/act — pull live data via
+  `python3 briefing.py --collect` or read Gmail, draft replies, send an off-schedule
+  briefing, etc.
+- **Standing input** goes in **`notes.md`** — the morning run reads it every day
+  (STEP 0 of `briefing_prompt.md`). When told "add a note: …", "remind me to …", "this
+  week go light", or "always prioritize X", append it to the right section of
+  `notes.md` rather than editing the prompt. Clear temporary items when they expire.
+
+## Making changes
+
+- Change **what the briefing says / how it reasons** → `briefing_prompt.md`.
+- Change **data sources or sending** (add a calendar, change recipient) → `config.env`
+  and/or `briefing.py`.
+- Change **the time** → the scheduler's trigger time *and* any wake schedule (keep the
+  wake a couple minutes earlier).
+- After changes, verify: `python3 briefing.py --self-test`, then a real run of
+  `run_briefing.sh`. Confirm the email arrives.
