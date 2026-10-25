@@ -6,5 +6,6 @@ tasks.json
 payload.json
 archive_uids.txt
 unsub_suggested.txt
+ufc_seen.txt
 *.log
 .claude/settings.local.json

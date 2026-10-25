@@ -72,6 +72,23 @@ PURE-MARKETING senders and recommend unsubscribing, each with its link. Respect 
 you don't repeat them. If nothing new/worthwhile, omit this section entirely. Keep it to
 a tiny "Worth unsubscribing?" block — sender, ~how many/month, and the link.
 
+STEP 2.8 — UFC WATCH (numbered PPV events only, e.g. "UFC 335" — ignore Fight Nights).
+Use WebSearch to check the current UFC schedule (ufc.com/events, ESPN, Wikipedia
+"List of UFC events"). Cities to watch default to Las Vegas, Los Angeles / Inglewood /
+Anaheim, and San Diego; `notes.md` can override the list.
+Track what you've already reported in `ufc_seen.txt` (create if missing), one line per
+event as `<event>|<status>`, e.g. `UFC 335|announced`, `UFC 335|tickets`.
+Show a small **"UFC"** block ONLY when at least one of these is true:
+- a NEW numbered event was announced (any city) → one line: number, date, city, main
+  event. If it's in a watched city, highlight it and suggest planning tickets.
+- tickets went on sale / presale (UFC Fight Club, Ticketmaster) for a watched-city
+  numbered event → say when and where to buy, note typical demand.
+- a numbered event is THIS weekend → a one-line heads-up (main card start time in the
+  configured timezone, where to watch).
+Append each item you report to `ufc_seen.txt` so it isn't repeated tomorrow. Only
+state dates/venues you actually found; if the search fails or nothing qualifies, omit
+the block entirely.
+
 STEP 3 — Write the file `payload.json` (in this directory) with EXACTLY these keys:
 `subject`, `text`, `html`. Requirements:
 - `subject`: like "Morning Briefing — <Weekday Mon D>".
